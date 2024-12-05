@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프라미스화</title>
+</head>
+<body>
+    <h1>프라미스화로 코드를 리팩터링하자(재사용)</h1>
+    <h2>XMLHttpRequest 로 비동기식 통신하는 함수를 프라미스화 해서 코드를 간단하게 줄여봅시다.</h2>
+    <div id="proCont"></div>
+    <div id="basCont"></div>
+
+    <script>
+    //함수를 리팩터링하는 과정(최!고난이도!)
+    function loadUrl(url,callBackFuc,method="GET"){
+        return new Promise((resovle,reject)=>{
+            const req=new XMLHttpRequest();
+            req.open(method,url)
+            req.send()
+            //req.onload=callBackFuc; 
+            req.onload=(evnet)=>{
+                if(req.status!==200){
+                    reject(req.status); //404(리소스가 없음) or 500(서버오류)
+                    return;
+                }
+                callBackFuc(evnet,resovle);
+                //callBackFuc(evnet);
+                //resovle("콜백함수 실행완료!")
+            }
+            //재정의하는 콜백함수에 매개변수를 여러개 전달하는 방법
+            //함수를 정의해놓고 그 내부에서 실행을 정의
+        });
+    }
+
+    loadUrl("../homework/l19baskets.json",(e,resovle)=>{
+        basCont.innerText=e.target.responseText;
+        resovle("장바구니 출력완료!");
+    }).then((msg)=>{
+        alert(msg);
+        return loadUrl("../homework/l18products.json",(e,resovle)=>{
+            proCont.innerText=e.target.responseText;
+            resovle("상품 출력완료!");
+        });
+    }).then((msg)=>{
+        alert(msg);
+    })
+    
+    //loadUrl 함수와 아주 유사한 fetch API
+
+
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>함수의 this binding 에 대해 알아봅시다.</title>
+</head>
+<body>
+    <h1>함수의 this binding 에 대해 알아봅시다.</h1>
+    <p></p>
+
+    <h2>this 바인딩의 예시</h2>
+    <ul>
+        <li><button id="btn1">this 바인딩</button></li>
+        <li><button id="btn2">this 바인딩 실패</button></li>
+    </ul>
+    <script>
+        class User{
+            constructor(id,n){
+                this.id=id;
+                this.n=n;
+                this.hello2=()=>{
+                    console.log(this.id+"야 안녕!");
+                }
+            }
+            hello=function(){
+                console.log(this.n+"아 안녕");
+                
+            }
+            sayHello=()=>{
+                console.log(this.n+"아 안녕!");
+                //클래스 내부에서 작성하면 this를 클래스로 생성하는 객체의 필드로 바인딩해준다.
+            }
+        }
+        const user= new User("develckm","자바스크립트");
+        user.hello();
+        user.hello2();
+        user.sayHello();
+        user.hello=()=>{
+            console.log(this.n+"아 잘가!!!");
+            //this가 user 객체를 참조하지 못한다.
+        }
+        user.hello();
+        console.log(user);
+
+
+        //타입으로 지정된 함수에서 this가 바인딩 되었냐?
+        //바인딩됨 : 객체를 this로 참조하는 것
+        //바인딩안됨 : 해당 객체들 뛰어넘고 그 부모객체를 this로 참조
+        function Member(id,n){
+            this.id=id;
+            this.n=n;
+            this.hello=function(){
+                console.log(this.n+"야 안녕");                
+            }
+            this.hello2=()=>{
+                console.log(this.n+"야 안녕!!");                
+            }
+        }
+        console.log("##########################");
+        const mem=new Member("abc","자바");
+        mem.hello();
+        mem.hello2();
+
+        mem.hello=function(){
+            console.log(this.id+"야 안녕");      
+            //"abc야 안녕"          
+        }.bind(user);
+        //익명함수에 user를 this로하는 새로운 함수를 만들어서 hello에 참조시키겠다.
+        mem.hello2=()=>{
+            console.log(this.id+"야 안녕!!");   
+             //"undefined야 안녕"              
+        }//.bind(mem); 
+        //bind()는 Object.prototype 함수기 때문에 프로토타입이 없는 화살표함수는 사용할 수 없다.
+        mem.hello();
+        mem.hello2();
+
+
+        btn1.onclick=function(){
+            console.log(this);//this=btn1
+            this.style.backgroundColor="blue";
+        }
+        btn2.onclick=()=>{
+            console.log(this);//this=window
+            this.style.backgroundColor="red";
+            //window.style ==undefined
+            //undefined.backgroundColor => 오류
+        }
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

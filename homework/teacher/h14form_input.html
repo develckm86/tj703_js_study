@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .success{
+            font-style: italic;
+            color: green;
+            font-weight: bolder;
+        }
+        .error{
+            font-style: italic;
+            color: red;
+            font-weight: bolder;
+        }
+
+    </style>
+    <title>form 요소와 input 요소 연습(입력의 유효성 검사 form validatoin)</title>
+</head>
+<body>
+    <h1>form 요소와 input 요소 연습</h1>
+    <ul>
+        <li>문제1. user와 id의 글자수가 맞을때만 form.submit을 하세요.</li>
+        <li>문제2. 개발언어(language) 체크박스를 만드세요.(js,java,pyton,jsp,spring,react)</li>
+        <li>문제3. 남(male)자 여자(female) 라디오 버튼을 만드세요.(gender)</li>
+        <li>문제4. 1,2,3,4 모두 작성되면 form.sumbmit을 하세요.</li>
+    </ul>
+    <form name="signupForm" action="signup.do">
+        <p>
+            <label>이름 :
+                <input type="text" name="user" value="" placeholder="이름은 2글자 이상">
+            </label>
+        </p>
+        <p>
+            <label>아이디 :
+                <input type="text" name="id" value="" placeholder="아이디는 4글자 이상">
+            </label>
+        </p>
+        <p>
+            <label>JS<input type="checkbox" name="language" value="js"></label>,
+            <label>Java<input type="checkbox" name="language" value="java"></label>,
+            <label>Python<input type="checkbox" name="language" value="python"></label>,
+            <label>JSP<input type="checkbox" name="language" value="jsp"></label>,
+            <label>SPRING<input type="checkbox" name="language" value="spring"></label>,
+            <label>REACT<input type="checkbox" name="language" value="react"></label>
+        </p>
+        <p>
+            <label>남성<input type="radio" name="gender" value="male"></label>,
+            <label>여성<input type="radio" name="gender" value="female"></label>
+        </p>
+        <p>
+            <!-- <input type="submit" value="제출버튼"> -->
+             <button name="resetBtn" type="reset">초기화</button>
+            <button type="submit">제출</button>
+        </p>
+    </form>
+    <script>
+        signupForm.onsubmit=(event)=>{
+            event.preventDefault();
+            //console.log(signupForm.gender);//RadioNodeList.value
+            
+            //console.log(signupForm.language);//RadioNodeList [],0,1,2
+            //console.log(signupForm.language.checked);  //배열은 객체를 바로참조할 수 없다.
+            //반복문, filter , cssSelector(!) 
+            let userValLen=signupForm.user.value.length;
+            let idValLen=signupForm.id.value.length;
+            let check=true; //중간에 문제가 생기면 false가 되는 filter 용 boolean
+            //[] == 속성선택자
+            //[name] : 속성 name이 있는것
+            //":" 가상 클래스 선택자로 특정 상태의 요소를 찾을 수 있다.
+            let langCheckedArr=signupForm.querySelectorAll("[name=language]:checked");
+            if(!langCheckedArr.length){//0==false
+                alert("언어를 한개라도 선택하세요!");
+                check=false;
+            }   
+            if(!signupForm.gender.value){//""==false 
+                alert("주민등록증의 성별을 한개라도 선택하세요!");
+                check=false;
+            }
+            if( userValLen<2 ){
+                alert("이름은 2글자 이상 입력하세요!");
+                check=false;
+            }
+            if( idValLen<4 ){
+                alert("이름은 4글자 이상 입력하세요!");
+                check=false;
+            }
+
+            if(check){
+                signupForm.submit(); //검사를 다 통과하면 실행
+            }
+        }
+
+
+    </script>
+
+</body>
+</html>
